@@ -1,30 +1,19 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { type Metadata } from "next";
+import "@workspace/ui/globals.css";
+import { appfonts } from "@/fonts";
 
-import "@workspace/ui/globals.css"
-import { Providers } from "@/components/providers"
+export const metadata: Metadata = {
+  title: "TRUGENT",
+};
 
-const fontSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
-
-export default function RootLayout({
+export default function AppRootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
-      >
-        <Providers>{children}</Providers>
+    <html suppressHydrationWarning lang="en" className={appfonts}>
+      <body className="">
+        <main className="root">{children}</main>
       </body>
     </html>
-  )
+  );
 }
