@@ -26,7 +26,7 @@ type WidgetState = {
 };
 
 export const useWidgetStore = create<WidgetState>((set) => ({
-  currentScreen: "auth",
+  currentScreen: "loading",
   organizationId: null,
   errorMessage: null,
   loadingMessage: null,

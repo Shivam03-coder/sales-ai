@@ -41,9 +41,7 @@ export default function WidgetAuthScreen({
 
   async function onSubmit(values: SessionTypes) {
     if (!organizationId) return;
-
     setLoadingMessage("Creating session...");
-
     const metadata: Doc<"contactSessions">["metadata"] = {
       userAgent: navigator.userAgent,
       language: navigator.language,

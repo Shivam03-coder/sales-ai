@@ -1,6 +1,8 @@
 import { v } from "convex/values";
 import { mutation } from "../_generated/server";
-const SESSION_DURATION = 24 * 60 * 60 * 1000;
+
+const SESSION_DURATION_MS = 24 * 60 * 60 * 1000;
+
 export const create = mutation({
   args: {
     name: v.string(),
@@ -25,8 +27,7 @@ export const create = mutation({
   },
   async handler(ctx, args) {
     const now = Date.now();
-    const expiresAt = now + SESSION_DURATION;
-    console.log(SESSION_DURATION);
+    const expiresAt = now + SESSION_DURATION_MS;
 
     const contactSessionId = await ctx.db.insert("contactSessions", {
       name: args.name,
@@ -46,11 +47,16 @@ export const validate = mutation({
   },
   async handler(ctx, args) {
     const contactSession = await ctx.db.get(args.contactSessionId);
-    if (!contactSession) throw new Error("Session not found");
+    console.log("🚀 ~ handler ~ contactSession:", contactSession)
+
+    if (!contactSession) {
+      return { valid: false, reason: "Session not found" };
+    }
 
     const now = Date.now();
-    if (contactSession.expiresAt < now) {
-      throw new Error("Session expired");
+
+    if (!contactSession.expiresAt || contactSession.expiresAt < now) {
+      return { valid: false, reason: "Session expired" };
     }
 
     return { valid: true, contactSession };
