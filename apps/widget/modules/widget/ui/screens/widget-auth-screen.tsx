@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Form,
   FormField,
@@ -15,6 +16,8 @@ import { Button } from "@workspace/ui/components/button";
 import { useMutation } from "convex/react";
 import { api } from "@workspace/server/_generated/api";
 import { Doc } from "@workspace/server/_generated/dataModel";
+import { useContactSessionStore } from "@/store/use-session-store";
+import { useWidgetStore } from "@/store/use-widget-store";
 
 const sessionSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -22,27 +25,29 @@ const sessionSchema = z.object({
 });
 type SessionTypes = z.infer<typeof sessionSchema>;
 
-function WidgetAuthScreen({
-  organizationId = "8398023012470174017281038",
+export default function WidgetAuthScreen({
+  organizationId,
 }: {
-  organizationId?: string;
+  organizationId: string;
 }) {
   const form = useForm<SessionTypes>({
     resolver: zodResolver(sessionSchema),
-    defaultValues: {
-      email: "",
-      name: "",
-    },
+    defaultValues: { name: "", email: "" },
   });
 
   const createContactSession = useMutation(api.public.contact_session.create);
+  const { setSession } = useContactSessionStore();
+  const { setScreen, setLoadingMessage } = useWidgetStore();
 
   async function onSubmit(values: SessionTypes) {
     if (!organizationId) return;
+
+    setLoadingMessage("Creating session...");
+
     const metadata: Doc<"contactSessions">["metadata"] = {
       userAgent: navigator.userAgent,
       language: navigator.language,
-      languages: navigator.languages ? navigator.languages.join(",") : "",
+      languages: navigator.languages?.join(",") || "",
       platform: navigator.platform,
       vendor: navigator.vendor,
       screenResolution: `${screen.width}x${screen.height}`,
@@ -54,15 +59,19 @@ function WidgetAuthScreen({
       currentUrl: window.location.href,
     };
 
-    const conactSessionId = await createContactSession({
-      ...values,
-      organizationId,
-      metadata,
-    });
-    console.log("🚀 ~ onSubmit ~ conactSessionId:", conactSessionId);
     try {
-    } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error:", error);
+      const contactSessionId = await createContactSession({
+        ...values,
+        organizationId,
+        metadata,
+      });
+      if (contactSessionId) {
+        setSession(organizationId, contactSessionId);
+        setScreen("loading");
+      }
+    } catch (err) {
+      console.error("Failed to create session", err);
+      setScreen("auth");
     }
   }
 
@@ -82,12 +91,12 @@ function WidgetAuthScreen({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-white">Name</FormLabel>
+                <FormLabel className="text-black">Name</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Your name"
                     type="text"
-                    className="text-white focus-visible:ring-blue-500"
+                    className="text-black focus-visible:ring-blue-500"
                     {...field}
                   />
                 </FormControl>
@@ -104,7 +113,7 @@ function WidgetAuthScreen({
                 <FormLabel className="text-white">Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="balamia@gmail.com"
+                    placeholder="you@example.com"
                     type="email"
                     className="text-white focus-visible:ring-blue-500"
                     {...field}
@@ -126,5 +135,3 @@ function WidgetAuthScreen({
     </div>
   );
 }
-
-export default WidgetAuthScreen;

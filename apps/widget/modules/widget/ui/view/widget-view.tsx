@@ -11,13 +11,15 @@ interface Props {
   organizationId: string;
 }
 
-export const WidgetView = ({ organizationId }: Props) => {
+export const WidgetView = ({
+  organizationId = "org_31TJE9yC73Ub7h3EtnhzFGclCiT",
+}: Props) => {
   const { currentScreen } = useWidgetStore();
 
   const screenComponents: Record<string, React.ReactNode> = {
     error: <WidgetErrorScreen />,
     loading: <WidgetLoadingScreen organizationId={organizationId} />,
-    auth: <WidgetAuthScreen />,
+    auth: <WidgetAuthScreen organizationId={organizationId} />,
     voice: <p>TODO : VOICE</p>,
     inbox: <p>TODO : INBOX</p>,
     selection: <p>TODO : SELECTION</p>,
