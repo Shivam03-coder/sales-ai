@@ -4,6 +4,8 @@ import { useWidgetStore } from "@/store/use-widget-store";
 import WidgetFooter from "../components/widget-footer";
 import WidgetHeader from "../components/widget-header";
 import WidgetAuthScreen from "../screens/widget-auth-screen";
+import WidgetErrorScreen from "../screens/widget-error-screen";
+import WidgetLoadingScreen from "../screens/widget-loading-screen";
 
 interface Props {
   organizationId: string;
@@ -13,8 +15,8 @@ export const WidgetView = ({ organizationId }: Props) => {
   const { currentScreen } = useWidgetStore();
 
   const screenComponents: Record<string, React.ReactNode> = {
-    error: <p>TODO : ERROR</p>,
-    loading: <p>Loading...</p>,
+    error: <WidgetErrorScreen />,
+    loading: <WidgetLoadingScreen organizationId={organizationId} />,
     auth: <WidgetAuthScreen />,
     voice: <p>TODO : VOICE</p>,
     inbox: <p>TODO : INBOX</p>,
@@ -30,7 +32,6 @@ export const WidgetView = ({ organizationId }: Props) => {
       </WidgetHeader>
 
       <div className="flex flex-1">
-        {/* Render the screen based on currentScreen */}
         {screenComponents[currentScreen] ?? <p>Screen not found</p>}
       </div>
 

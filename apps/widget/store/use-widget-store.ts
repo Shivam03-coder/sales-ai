@@ -18,16 +18,21 @@ export const CONTACT_SESSION_KEY = "echo_contact_session";
 type WidgetState = {
   currentScreen: WidgetScreen;
   sessionKey: string | null;
+  errorMessage: string | null;
   setScreen: (screen: WidgetScreen) => void;
   setSessionKey: (key: string) => void;
+  setError: (message: string) => void;
   reset: () => void;
 };
 
 export const useWidgetStore = create<WidgetState>((set) => ({
-  currentScreen: "auth",
+  currentScreen: "loading",
   sessionKey: null,
+  errorMessage: null,
 
   setScreen: (screen) => set({ currentScreen: screen }),
   setSessionKey: (key) => set({ sessionKey: key }),
-  reset: () => set({ currentScreen: "loading", sessionKey: null }),
+  setError: (message) => set({ currentScreen: "error", errorMessage: message }),
+  reset: () =>
+    set({ currentScreen: "loading", sessionKey: null, errorMessage: null }),
 }));
