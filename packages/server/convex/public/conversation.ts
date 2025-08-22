@@ -1,5 +1,8 @@
 import { ConvexError, v } from "convex/values";
-import { mutation } from "../_generated/server";
+import { mutation, query } from "../_generated/server";
+import agent from "../src/ai/agents/support_agent";
+import { saveMessage } from "@convex-dev/agent";
+import { components } from "../_generated/api";
 
 export const create = mutation({
   args: {
@@ -15,11 +18,21 @@ export const create = mutation({
       });
     }
 
-    const threadId = "12231312";
+    const { threadId } = await agent.createThread(ctx, {
+      userId: args.organizationId,
+    });
+
+    await saveMessage(ctx, components.agent, {
+      threadId,
+      message: {
+        role: "assistant",
+        content: "How Can I Help You Today ?",
+      },
+    });
 
     const conversationId = await ctx.db.insert("conversations", {
       contactSessionId: session._id,
-      status: "resolved",
+      status: "unresolved",
       threadId,
       organizationId: args.organizationId,
     });
@@ -28,7 +41,7 @@ export const create = mutation({
   },
 });
 
-export const getConversation = mutation({
+export const getOne = query({
   args: {
     conversationId: v.id("conversations"),
     contactSessionId: v.id("contactSessions"),
@@ -38,18 +51,31 @@ export const getConversation = mutation({
 
     if (!session || session.expiresAt < Date.now()) {
       throw new ConvexError({
-        code: "UNAUTHORiZED",
-        message: "INVALID SESSION",
+        code: "UNAUTHORIZED",
+        message: "Invalid session",
       });
     }
 
     const conversation = await ctx.db.get(args.conversationId);
 
-    if (!conversation) null;
+    if (!conversation) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Conversation not found",
+      });
+    }
+
+    if (conversation.contactSessionId !== session._id) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Session does not match conversation",
+      });
+    }
+
     return {
-      _id: conversation?._id,
-      status: conversation?.status,
-      threadId: conversation?.threadId,
+      _id: conversation._id,
+      status: conversation.status,
+      threadId: conversation.threadId,
     };
   },
 });

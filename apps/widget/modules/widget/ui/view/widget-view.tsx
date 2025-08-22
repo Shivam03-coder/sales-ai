@@ -30,7 +30,7 @@ export const WidgetView = ({
   };
 
   return (
-    <main className="flex min-h-screen min-w-screen h-full w-full flex-col overflow-hidden rounded-xl border">
+    <main className="flex min-h-screen  flex-col overflow-hidden rounded-xl border">
       <WidgetHeader>
         <WelcomeMessage />
       </WidgetHeader>

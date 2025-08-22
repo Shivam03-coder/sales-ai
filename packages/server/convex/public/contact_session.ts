@@ -47,7 +47,6 @@ export const validate = mutation({
   },
   async handler(ctx, args) {
     const contactSession = await ctx.db.get(args.contactSessionId);
-    console.log("🚀 ~ handler ~ contactSession:", contactSession)
 
     if (!contactSession) {
       return { valid: false, reason: "Session not found" };

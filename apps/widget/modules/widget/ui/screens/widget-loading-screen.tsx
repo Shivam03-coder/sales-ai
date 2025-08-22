@@ -5,7 +5,7 @@ import { useWidgetStore } from "@/store/use-widget-store";
 import { api } from "@workspace/server/_generated/api";
 import { Id } from "@workspace/server/_generated/dataModel";
 import { useAction, useMutation } from "convex/react";
-import { Loader2 } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type InitSteps = "ORG" | "SESSION" | "DONE" | "SETTINGS";
@@ -111,7 +111,7 @@ export default function WidgetLoadingScreen({
 
   return (
     <div className="flex flex-col items-center justify-center w-full text-center px-4">
-      <Loader2 className="h-12 w-12 animate-spin text-primary mb-4" />
+      <Loader className="h-14 w-14 animate-spin text-primary mb-4" />
       <h1 className="text-lg font-semibold">Loading Sales-AI...</h1>
       <p className="text-sm text-muted-foreground">
         {loadingMessage || "Please wait while we connect your widget."}
