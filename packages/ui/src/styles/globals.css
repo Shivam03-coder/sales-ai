@@ -20,7 +20,7 @@
   .app {
     height: 100vh;
     width: 100%;
-    @apply font-lexend text-base;
+    @apply font-inter text-base;
   }
 
   h1 {

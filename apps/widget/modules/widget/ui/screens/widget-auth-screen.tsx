@@ -25,7 +25,7 @@ type SessionTypes = z.infer<typeof sessionSchema>;
 function WidgetAuthScreen({
   organizationId = "8398023012470174017281038",
 }: {
-  organizationId: string;
+  organizationId?: string;
 }) {
   const form = useForm<SessionTypes>({
     resolver: zodResolver(sessionSchema),
@@ -67,7 +67,14 @@ function WidgetAuthScreen({
   }
 
   return (
-    <div className="mx-auto my-auto w-full max-w-md rounded-2xl p-8">
+    <div className="mx-auto my-auto w-[95%] lg:w-[70%] rounded-2xl p-8">
+      <div className="flex flex-col items-center justify-center gap-1 px-2 py-4 text-center">
+        <h1 className="text-2xl font-bold tracking-tight">SALES-AI</h1>
+        <h2 className="text-base text-muted-foreground">
+          Your smart sales assistant 💬
+        </h2>
+      </div>
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <FormField

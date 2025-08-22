@@ -1,5 +1,6 @@
 "use client";
 
+import { useWidgetStore } from "@/store/use-widget-store";
 import WidgetFooter from "../components/widget-footer";
 import WidgetHeader from "../components/widget-header";
 import WidgetAuthScreen from "../screens/widget-auth-screen";
@@ -9,14 +10,30 @@ interface Props {
 }
 
 export const WidgetView = ({ organizationId }: Props) => {
+  const { currentScreen } = useWidgetStore();
+
+  const screenComponents: Record<string, React.ReactNode> = {
+    error: <p>TODO : ERROR</p>,
+    loading: <p>Loading...</p>,
+    auth: <WidgetAuthScreen />,
+    voice: <p>TODO : VOICE</p>,
+    inbox: <p>TODO : INBOX</p>,
+    selection: <p>TODO : SELECTION</p>,
+    chat: <p>TODO : CHAT</p>,
+    contact: <p>TODO : CONTACT</p>,
+  };
+
   return (
-    <main className="flex min-h-screen min-w-screen h-full w-full flex-col overflow-hidden rounded-xl border ">
+    <main className="flex min-h-screen min-w-screen h-full w-full flex-col overflow-hidden rounded-xl border">
       <WidgetHeader>
         <WelcomeMessage />
       </WidgetHeader>
+
       <div className="flex flex-1">
-        <WidgetAuthScreen organizationId={organizationId} />
+        {/* Render the screen based on currentScreen */}
+        {screenComponents[currentScreen] ?? <p>Screen not found</p>}
       </div>
+
       <WidgetFooter />
     </main>
   );
