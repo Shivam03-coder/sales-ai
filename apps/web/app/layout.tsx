@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { AppRootProviders } from "@/providers/app-root-providers";
 
 export const metadata: Metadata = {
-  title: "TRUGENT",
+  title: "SALESA-I",
 };
 
 export default function AppRootLayout({

@@ -1,9 +1,10 @@
 import { type Metadata } from "next";
 import "@workspace/ui/globals.css";
 import { appfonts } from "@/fonts";
+import { ConvexClientProvider } from "@/modules/widget/ui/components/convex-provider";
 
 export const metadata: Metadata = {
-  title: "TRUGENT",
+  title: "SALES-AI",
 };
 
 export default function AppRootLayout({
@@ -11,9 +12,11 @@ export default function AppRootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html suppressHydrationWarning lang="en" className={appfonts}>
-      <body className="">
-        <main className="root">{children}</main>
-      </body>
+      <ConvexClientProvider>
+        <body className="">
+          <main className="root">{children}</main>
+        </body>
+      </ConvexClientProvider>
     </html>
   );
 }

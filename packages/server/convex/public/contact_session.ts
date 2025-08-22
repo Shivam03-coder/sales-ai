@@ -26,6 +26,7 @@ export const create = mutation({
   async handler(ctx, args) {
     const now = Date.now();
     const expiresAt = now + SESSION_DURATION;
+    console.log(SESSION_DURATION);
 
     const contactSessionId = await ctx.db.insert("contactSessions", {
       name: args.name,
