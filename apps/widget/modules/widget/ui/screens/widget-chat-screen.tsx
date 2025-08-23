@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   AIConversation,
   AIConversationContent,
@@ -13,6 +13,7 @@ import {
 } from "@workspace/ui/ai/input";
 import {
   AIMessage,
+  AIMessageAvatar,
   AIMessageContent,
 } from "@workspace/ui/ai/message";
 import { useWidgetStore } from "@/store/use-widget-store";
@@ -25,14 +26,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField } from "@workspace/ui/components/form";
-
+import { InfiniteScrollTrigger } from "@workspace/ui/components/infinite-scroll-trigger";
+import { useInfiniteScroll } from "@workspace/ui/hooks/use-infinite-scroll";
 const MessageSchema = z.object({
   content: z
     .string()
     .min(1, "Message cannot be empty")
     .max(500, "Message too long"),
 });
-
+import AvatarImage from "../../../assets/avatar.png";
+import ChatbotImage from "../../../assets/chatbot.png";
 type MessageForm = z.infer<typeof MessageSchema>;
 
 const WidgetChatScreen = () => {
@@ -40,6 +43,8 @@ const WidgetChatScreen = () => {
   const { conversationId } = useConversationStore();
   const { getSession } = useContactSessionStore();
   const contactSessionId = getSession(organizationId!);
+
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const conversation = useQuery(
     api.public.conversation.getOne,
@@ -56,10 +61,24 @@ const WidgetChatScreen = () => {
     { initialNumItems: 10 }
   );
 
+  const { topElementRef, handleLoadMore, canLoadMore, isLoadingMore } =
+    useInfiniteScroll({
+      loadMore: messages.loadMore,
+      loadSize: 10,
+      status: messages.status,
+    });
+
   const form = useForm<MessageForm>({
     resolver: zodResolver(MessageSchema),
     defaultValues: { content: "" },
   });
+
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  }, [messages.results]);
 
   const createMessage = useAction(api.public.messages.create);
 
@@ -76,9 +95,14 @@ const WidgetChatScreen = () => {
   };
 
   return (
-   <div className="p-6">
-     <AIConversation id="widget-chat">
+    <AIConversation id="widget-chat">
       <AIConversationContent id="chat-messages">
+        <InfiniteScrollTrigger
+          canLoadMore={canLoadMore}
+          onLoadMore={handleLoadMore}
+          isLoadingMore={isLoadingMore}
+          ref={topElementRef}
+        />
         {toUIMessages(messages.results ?? []).map((msg) => (
           <AIMessage
             id={`msg-${msg.id}`}
@@ -88,6 +112,11 @@ const WidgetChatScreen = () => {
             <AIMessageContent id={`msg-content-${msg.id}`}>
               {msg.text}
             </AIMessageContent>
+            {msg.role === "assistant" ? (
+              <AIMessageAvatar src={ChatbotImage.src ?? ChatbotImage} />
+            ) : (
+              <AIMessageAvatar src={AvatarImage.src ?? AvatarImage} />
+            )}
           </AIMessage>
         ))}
       </AIConversationContent>
@@ -95,7 +124,7 @@ const WidgetChatScreen = () => {
         <AIInput
           id="chat-input"
           onSubmit={form.handleSubmit(onSubmit)}
-          className="rounded-none border-x-0 border-b-0"
+          className=" w-[99%]  flex my-4 shadow-2xl rounded-xl mx-auto"
         >
           <FormField
             control={form.control}
@@ -115,25 +144,26 @@ const WidgetChatScreen = () => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
                     form.handleSubmit(onSubmit)();
+                    form.reset();
                   }
                 }}
               />
             )}
           />
           <AIInputToolbar id="chat-toolbar">
-            <AIInputTools id="chat-tools" />
             <AIInputSubmit
               id="chat-submit"
               disabled={
                 conversation?.status === "resolved" || !form.formState.isValid
               }
               type="submit"
+              className="bg-primary"
             />
+            <AIInputTools id="chat-tools" />
           </AIInputToolbar>
         </AIInput>
       </Form>
     </AIConversation>
-   </div>
   );
 };
 

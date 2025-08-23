@@ -50,8 +50,14 @@ export const AIMessageAvatar = ({
   className,
   ...props
 }: AIMessageAvatarProps) => (
-  <Avatar className={cn("size-8", className)} {...props}>
-    <AvatarImage alt="" className="mt-0 mb-0" src={src} />
-    <AvatarFallback>{name?.slice(0, 2) || "ME"}</AvatarFallback>
+  <Avatar className={cn("size-8", "flex items-center justify-center", className)} {...props}>
+    <AvatarImage 
+      alt={name || "Avatar"} 
+      src={src} 
+      className="w-full h-full object-cover object-center rounded-full" 
+    />
+    <AvatarFallback className="flex items-center justify-center">
+      {name?.slice(0, 2) || "ME"}
+    </AvatarFallback>
   </Avatar>
 );

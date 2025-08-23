@@ -38,7 +38,7 @@ export const WidgetView = ({
       <div className="flex flex-1">
         {screenComponents[currentScreen] ?? <p>Screen not found</p>}
       </div>
-      <WidgetFooter />
+      {/* <WidgetFooter /> */}
     </main>
   );
 };
