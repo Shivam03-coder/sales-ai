@@ -3,60 +3,66 @@
 import { Button } from "@workspace/ui/components/button";
 import { cn } from "@workspace/ui/lib/utils";
 import { HomeIcon, InboxIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@workspace/ui/components/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
 import React from "react";
+import { useWidgetStore } from "@/store/use-widget-store";
+import { motion } from "framer-motion";
 
 const WidgetFooter = () => {
-  const screen = "selection"; // current screen state (replace with real state later)
+  const { currentScreen, setScreen } = useWidgetStore();
+
+  const navItems = [
+    { id: "selection", label: "Home", icon: HomeIcon },
+    { id: "inbox", label: "Inbox", icon: InboxIcon },
+  ] as const;
 
   return (
-    <footer className="flex items-center justify-between border-t bg-background/70 backdrop-blur-md">
+    <footer className="relative flex items-center justify-around border-t bg-white/70 dark:bg-black/40 backdrop-blur-xl shadow-lg">
       <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-14 flex-1 rounded-none transition-all duration-200",
-                screen === "selection" && "bg-accent text-primary"
-              )}
-            >
-              <HomeIcon
-                className={cn(
-                  "size-5 transition-colors",
-                  screen === "selection" && "text-primary"
-                )}
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="top" className="text-sm">
-            Home
-          </TooltipContent>
-        </Tooltip>
+        {navItems.map(({ id, label, icon: Icon }) => {
+          const isActive = currentScreen === id;
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-14 flex-1 rounded-none transition-all duration-200",
-                screen === "inbox" && "bg-accent text-primary"
-              )}
-            >
-              <InboxIcon
-                className={cn(
-                  "size-5 transition-colors",
-                  screen === "inbox" && "text-primary"
-                )}
-              />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="top" className="text-sm">
-            Inbox
-          </TooltipContent>
-        </Tooltip>
+          return (
+            <Tooltip key={id}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  onClick={() => setScreen(id)}
+                  size="icon"
+                  className={cn(
+                    "relative h-14 flex-1 rounded-none transition-all duration-300",
+                    "hover:bg-accent/20 hover:scale-105",
+                    isActive && "text-primary"
+                  )}
+                >
+                  {/* Animated active indicator bubble */}
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeNav"
+                      className="absolute inset-0 bg-accent/30 dark:bg-accent/40 rounded-lg"
+                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    />
+                  )}
+
+                  <Icon
+                    className={cn(
+                      "relative z-10 size-6 transition-colors",
+                      isActive ? "text-primary" : "text-muted-foreground"
+                    )}
+                  />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-sm">
+                {label}
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
       </TooltipProvider>
     </footer>
   );

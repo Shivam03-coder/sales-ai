@@ -8,6 +8,7 @@ import WidgetErrorScreen from "../screens/widget-error-screen";
 import WidgetLoadingScreen from "../screens/widget-loading-screen";
 import WidgetSelectionScreen from "../screens/widget-selection-screen";
 import WidgetChatScreen from "../screens/widget-chat-screen";
+import WidgetInboxScreen from "../screens/widget-inbox-screen";
 
 interface Props {
   organizationId: string;
@@ -23,22 +24,22 @@ export const WidgetView = ({
     loading: <WidgetLoadingScreen organizationId={organizationId} />,
     auth: <WidgetAuthScreen organizationId={organizationId} />,
     voice: <p>TODO : VOICE</p>,
-    inbox: <p>TODO : INBOX</p>,
+    inbox: <WidgetInboxScreen />,
     selection: <WidgetSelectionScreen />,
     chat: <WidgetChatScreen />,
     contact: <p>TODO : CONTACT</p>,
   };
 
   return (
-    <main className="flex min-h-screen  flex-col overflow-hidden rounded-xl border">
+    <main className="flex min-h-screen  flex-col overflow-hidden rounded-xl ">
       <WidgetHeader>
         <WelcomeMessage />
       </WidgetHeader>
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 mx-3">
         {screenComponents[currentScreen] ?? <p>Screen not found</p>}
       </div>
-      {/* <WidgetFooter /> */}
+      <WidgetFooter />
     </main>
   );
 };
