@@ -119,10 +119,10 @@ export const getMany = query({
 
         return {
           _id: conversation._id,
-          _creationTime: conversation._creationTime,
-          status: conversation.status,
-          organizationId: conversation.organizationId,
           threadId: conversation.threadId,
+          status: conversation.status,
+          _creationTime: conversation._creationTime,
+          organizationId: conversation.organizationId,
           lastMessage,
         };
       })

@@ -1,3 +1,4 @@
+
 import { AuthGuard } from "@/module/auth/ui/components/auth-guard";
 import OrganizationGuard from "@/module/auth/ui/components/organization-guard";
 import AppSidebarHeader from "@/module/dashboard/ui/components/app-sidebar-header";
@@ -17,10 +18,12 @@ export const DashboardLayout = async ({
 }) => {
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
   return (
     <AuthGuard>
       <OrganizationGuard>
-        <SidebarProvider>
+        {/* Pass defaultOpen to SidebarProvider */}
+        <SidebarProvider defaultOpen={defaultOpen ?? false}>
           <AppSidebar
             header={
               <OrganizationSwitcher
