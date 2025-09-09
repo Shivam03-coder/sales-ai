@@ -12,6 +12,7 @@ const getCountryFromTimezone = (timeZone: string) => {
   return {
     country,
     name: country?.name,
+    countryCode
   };
 };
 

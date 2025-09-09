@@ -160,7 +160,6 @@
   --sidebar-ring: oklch(0.488 0.243 264.376);
 }
 
-
 @utility center {
   @apply flex items-center justify-center;
 }
@@ -176,4 +175,18 @@
 
 .cl-userButtonPopoverCard {
   background-color: var(--color-secondary);
+}
+
+@keyframes shine {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 20% 50%;
+  }
+}
+
+.animate-shine {
+  background-size: 200% auto;
+  animation: shine 3s linear infinite;
 }
