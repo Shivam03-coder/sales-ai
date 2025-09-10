@@ -6,6 +6,8 @@ import {
 } from "@workspace/ui/components/resizable";
 import React, { type ReactNode } from "react";
 import ConversationPanle from "../components/conversation-panel";
+import Image from "next/image";
+
 const ConversationLayout = ({ children }: { children: ReactNode }) => {
   return (
     <ResizablePanelGroup className="h-full flex-1" direction="horizontal">
@@ -13,9 +15,8 @@ const ConversationLayout = ({ children }: { children: ReactNode }) => {
         <ConversationPanle />
       </ResizablePanel>
       <ResizableHandle />
-      <ResizablePanel className="h-full" defaultSize={70}>
-        const he summation of all the number is s ame as the ebponfied coding
-        round 36 may be will depriacte it by 3rd og july
+      <ResizablePanel className="h-full center" defaultSize={70}>
+        <Image alt="logo.png" src={"/logo.png"} height={400} width={400} />
       </ResizablePanel>
     </ResizablePanelGroup>
   );
