@@ -16,7 +16,7 @@ const ConversationLayout = ({ children }: { children: ReactNode }) => {
       </ResizablePanel>
       <ResizableHandle />
       <ResizablePanel className="h-full center" defaultSize={70}>
-        <Image alt="logo.png" src={"/logo.png"} height={400} width={400} />
+        {children}
       </ResizablePanel>
     </ResizablePanelGroup>
   );

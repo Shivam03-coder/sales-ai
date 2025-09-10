@@ -1,5 +1,9 @@
 import type { ComponentProps, HTMLAttributes } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@workspace/ui/components/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@workspace/ui/components/avatar";
 import { cn } from "@workspace/ui/lib/utils";
 
 export type AIMessageProps = HTMLAttributes<HTMLDivElement> & {
@@ -50,14 +54,17 @@ export const AIMessageAvatar = ({
   className,
   ...props
 }: AIMessageAvatarProps) => (
-  <Avatar className={cn("size-8", "flex items-center justify-center", className)} {...props}>
-    <AvatarImage 
-      alt={name || "Avatar"} 
-      src={src} 
-      className="w-full h-full object-cover object-center rounded-full" 
+  <Avatar
+    className={cn("size-8", "flex items-center justify-center", className)}
+    {...props}
+  >
+    <AvatarImage
+      alt={name || "Avatar"}
+      src={src ?? "./logo.png"}
+      className="w-full h-full object-cover object-center rounded-full"
     />
-    <AvatarFallback className="flex items-center justify-center">
-      {name?.slice(0, 2) || "ME"}
+    <AvatarFallback className="flex font-lexend bg-blue-800 uppercase text-white items-center justify-center">
+      {name?.slice(0, 2) || ""}
     </AvatarFallback>
   </Avatar>
 );

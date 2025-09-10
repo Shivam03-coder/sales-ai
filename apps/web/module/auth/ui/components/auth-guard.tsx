@@ -14,7 +14,7 @@ export const AuthGuard = ({ children }: { children: ReactNode }) => {
           <Loader className="animate-spin" size={40} />
         </AuthLayout>
       </AuthLoading>
-      <Authenticated>{children}</Authenticated>
+      <Authenticated >{children}</Authenticated>
       <Unauthenticated>
         <AuthLayout>
           <SignInView />

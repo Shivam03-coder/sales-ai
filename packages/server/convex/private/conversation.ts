@@ -90,3 +90,51 @@ export const getMany = query({
     };
   },
 });
+
+export const getOne = query({
+  args: {
+    conversationId: v.id("conversations"),
+  },
+  async handler(ctx, args) {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "User identity not found",
+      });
+    }
+
+    const orgId = identity.orgId as string;
+
+    if (!orgId) {
+      throw new ConvexError({
+        code: "UNAUTHORIZED",
+        message: "Organization not found",
+      });
+    }
+
+    const conversation = await ctx.db.get(args.conversationId);
+
+    if (!conversation) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Conversation not found",
+      });
+    }
+
+    if (!conversation.organizationId) {
+      throw new ConvexError({
+        code: "NOT_FOUND",
+        message: "Invalid organization",
+      });
+    }
+
+    const contactSession = await ctx.db.get(conversation.contactSessionId);
+
+    return {
+      ...conversation,
+      ...contactSession,
+    };
+  },
+});

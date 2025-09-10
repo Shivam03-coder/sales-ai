@@ -1,7 +1,7 @@
 
 import { AuthGuard } from "@/module/auth/ui/components/auth-guard";
 import OrganizationGuard from "@/module/auth/ui/components/organization-guard";
-import AppSidebarHeader from "@/module/dashboard/ui/components/app-sidebar-header";
+import AppSidebarHeader from "@/module/conversation/ui/components/app-sidebar-header";
 import { OrganizationSwitcher } from "@clerk/nextjs";
 import { AppSidebar } from "@workspace/ui/components/app-sidebar";
 import {

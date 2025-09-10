@@ -13,10 +13,7 @@ const AppSidebarHeader = () => {
         <h6 className="bg-transparent ">SALES AI PLATFORM</h6>
       </div>
       <div className="flex items-center gap-2 px-4 ">
-        <BellIcon className="size-5" />
-        <Settings className="size-5" />
         <UserButton />
-        <OrganizationSwitcher />
       </div>
     </header>
   );
