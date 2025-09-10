@@ -44,7 +44,7 @@ const WidgetChatScreen = () => {
   const { getSession } = useContactSessionStore();
   const contactSessionId = getSession(organizationId!);
 
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const conversation = useQuery(
     api.public.conversation.getOne,
@@ -61,6 +61,10 @@ const WidgetChatScreen = () => {
     { initialNumItems: 10 }
   );
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.results]);
+
   const { topElementRef, handleLoadMore, canLoadMore, isLoadingMore } =
     useInfiniteScroll({
       loadMore: messages.loadMore,
@@ -72,13 +76,6 @@ const WidgetChatScreen = () => {
     resolver: zodResolver(MessageSchema),
     defaultValues: { content: "" },
   });
-
-  useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop =
-        messagesContainerRef.current.scrollHeight;
-    }
-  }, [messages.results]);
 
   const createMessage = useAction(api.public.messages.create);
 
@@ -119,12 +116,13 @@ const WidgetChatScreen = () => {
             )}
           </AIMessage>
         ))}
+        <div ref={messagesEndRef} />
       </AIConversationContent>
       <Form {...form}>
         <AIInput
           id="chat-input"
           onSubmit={form.handleSubmit(onSubmit)}
-          className=" w-[99%]  flex my-4 shadow-2xl rounded-xl mx-auto"
+          className=" w-[99%] border-0 p-4 flex my-4 shadow rounded-xl mx-auto"
         >
           <FormField
             control={form.control}

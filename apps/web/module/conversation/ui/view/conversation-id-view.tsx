@@ -73,8 +73,16 @@ const ConversationIdView = ({
       status: messages.status,
     });
 
-  const onSubmit = async () => {
-    form.reset();
+  const onSubmit = async (values: FormValues) => {
+    try {
+      await createMessage({
+        conversationId,
+        prompt: values.message,
+      });
+      form.reset();
+    } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error:", error);
+    }
   };
 
   return (
@@ -84,7 +92,7 @@ const ConversationIdView = ({
           <MoreHorizontal />
         </Button>
       </header>
-      <AIConversation className="max-h-[calc(100vh)] px-10">
+      <AIConversation className="h-full px-10">
         <AIConversationContent id="chat-messages">
           <InfiniteScrollTrigger
             canLoadMore={canLoadMore}
@@ -117,7 +125,7 @@ const ConversationIdView = ({
           <AIInput
             id="chat-input"
             onSubmit={form.handleSubmit(onSubmit)}
-            className=" w-[99%]  flex my-4 shadow-2xl rounded-xl mx-auto"
+            className=" w-[99%] border-0 p-4  flex my-4 shadow-2xl rounded-xl mx-auto"
           >
             <FormField
               control={form.control}
@@ -150,7 +158,7 @@ const ConversationIdView = ({
                   conversation?.status === "resolved" || !form.formState.isValid
                 }
                 type="submit"
-                className="bg-primary"
+                className="bg-primary "
               />
               <AIInputTools id="chat-tools" />
             </AIInputToolbar>
